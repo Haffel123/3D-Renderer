@@ -1,10 +1,10 @@
 // Initialize constants and variables
 const screen = document.getElementById("screen");
 const ctx = screen.getContext("2d", { willReadFrequently: true });
-const camera = { x: 0, y: 0, z: -5, pitch: 0, yaw: 0, roll: 0 };
 const toRadians = (deg) => deg * (Math.PI / 180);
 
 /* <-- Edittable --> */
+const camera = { x: 0, y: 0, z: 5, pitch: 0, yaw: toRadians(180), roll: 0 };
 const FOV = toRadians(90);
 const playerSpeed = 0.1;
 const rotSpeed = 0.1;
@@ -239,6 +239,7 @@ function parseObj(data) {
 	const lines = data.split("\n");
 	let vertices = [];
 	let object = [];
+
 	for (let line of lines) {
 		line = line.trim();
 		if (line.startsWith("v ")) {
@@ -249,12 +250,15 @@ function parseObj(data) {
 			vertices.push(new Vector3(x, y, z));
 		} else if (line.startsWith("f ")) {
 			const parts = line.split(/\s+/);
-			const v1 = parseInt(parts[1]) - 1;
-			const v2 = parseInt(parts[2]) - 1;
-			const v3 = parseInt(parts[3]) - 1;
+
+			const v1 = parseInt(parts[1].split("/")[0]) - 1;
+			const v2 = parseInt(parts[2].split("/")[0]) - 1;
+			const v3 = parseInt(parts[3].split("/")[0]) - 1;
+
 			object.push([vertices[v1], vertices[v2], vertices[v3], randomColor()]);
 		}
 	}
+
 	objects.push(object);
 }
 
